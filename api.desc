@@ -1,0 +1,3 @@
+curl -v -XPOST 'http://127.0.0.1:8080/edu/student/add?name=jacob&gender=male'
+
+culr -v -XGET 'http://127.0.0.1:8080/edu/student/list'

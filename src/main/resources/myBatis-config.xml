@@ -1,0 +1,18 @@
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+    <typeAlias type="jacob.su.edu.domain.Signin" alias="signin"/>
+    <typeAlias type="jacob.su.edu.domain.Student" alias="student"/>
+    <typeAlias type="jacob.su.edu.domain.Subject" alias="subject"/>
+    <typeAlias type="jacob.su.edu.domain.Teacher" alias="teacher"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mapping/Subject.xml"/>
+    <mapper resource="mapping/Signin.xml"/>
+    <mapper resource="mapping/Student.xml"/>
+    <mapper resource="mapping/Teacher.xml"/>
+	</mappers>
+</configuration>

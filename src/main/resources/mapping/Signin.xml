@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jacob.su.edu.domain.Signin">
+  <resultMap id="baseSigninMap" type="jacob.su.edu.domain.Signin">
+    <id column="siginId" property="siginId"></id>
+    <result column="studentId" property="studentId"></result>
+    <result column="subjectId" property="subjectId"></result>
+  </resultMap>
+
+  <sql id="keys">
+    <trim suffixOverrides=",">
+      <if test="studentId!=null">
+        studentId,
+      </if>
+      <if test="subjectId!=null">
+        subjectId,
+      </if>
+    </trim>
+  </sql>
+
+  <sql id="values">
+    <trim suffixOverrides=",">
+      <if test="studentId!=null">
+        #{studentId},
+      </if>
+      <if test="subjectId!=null">
+        #{subjectId},
+      </if>
+    </trim>
+  </sql>
+  
+  <insert id="insertOne" parameterType="signin" keyProperty="siginId" useGeneratedKeys="true">
+    INSERT INTO edu.signins (<include refid="keys"/>) VALUES  (<include refid="values" />);
+  </insert>
+
+  <update id="updateOne" parameterType="signin">
+ 		update edu.signins
+ 		<set>
+      <trim suffixOverrides=",">
+        <if test="studentId!=null">
+          studentId=#{studentId},
+        </if>
+        <if test="subjectId!=null">
+          subjectId=#{subjectId},
+        </if>
+      </trim>
+ 		</set>
+ 		where siginId=#{siginId};
+ 	</update>
+
+  <delete id="deleteOne" parameterType="int">
+    DELETE FROM edu.signins WHERE siginId=#{siginId};
+  </delete>
+
+
+  <select id="selectOneById" resultMap="baseSigninMap" parameterType="int">
+    SELECT * FROM edu.signins WHERE siginId=#{siginId};
+  </select>
+
+  <select id="selectList" resultMap="baseSigninMap">
+    SELECT * FROM edu.signins ;
+  </select>
+
+  <select id="selectListByStudentId" resultMap="baseSigninMap" parameterType="int">
+    SELECT * FROM edu.signins WHERE studentId=#{studentId};
+  </select>
+  
+  
+  <select id="selectListBySubjectId" resultMap="baseSigninMap" parameterType="int">
+    SELECT * FROM edu.signins WHERE subjectId=#{subjectId};
+  </select>
+  
+</mapper>

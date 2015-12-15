@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jacob.su.edu.domain.Teacher">
+  <resultMap id="baseTeacherMap" type="jacob.su.edu.domain.Teacher">
+    <id column="teacherId" property="teacherId"></id>
+    <result column="teacherName" property="teacherName"></result>
+  </resultMap>
+
+  <resultMap id="teacherMap" type="jacob.su.edu.domain.Teacher" extends="baseTeacherMap">
+    <association property="subject" resultMap="jacob.su.edu.domain.Subject.baseSubjectMap" column="subjectId"></association>
+  </resultMap>
+
+
+
+  <sql id="keys">
+    <trim suffixOverrides=",">
+      <if test="teacherName!=null">
+        teacherName,
+      </if>
+      <if test="subject!=null and subject.subjectId!=null">
+        subjectId,
+      </if>
+    </trim>
+  </sql>
+
+  <sql id="values">
+    <trim suffixOverrides=",">
+      <if test="teacherName!=null">
+        #{teacherName},
+      </if>
+      <if test="subject!=null and subject.subjectId!=null">
+        #{subjectId},
+      </if>
+    </trim>
+  </sql>
+
+  <insert id="insertOne" parameterType="teacher" keyProperty="teacherId" useGeneratedKeys="true">
+    INSERT INTO edu.teachers (<include refid="keys"/>) VALUES  (<include refid="values" />);
+  </insert>
+
+  <update id="updateOne" parameterType="teacher">
+ 		update edu.teachers
+ 		<set>
+      <trim suffixOverrides=",">
+        <if test="teacherName!=null">
+          teacherName=#{teacherName},
+        </if>
+        <if test="subject!=null and subject.subjectId!=null">
+          subjectId=#{subjectId},
+        </if>
+      </trim>
+ 		</set>
+ 		where teacherId=#{teacherId};
+ 	</update>
+
+  <delete id="deleteOne" parameterType="int">
+    DELETE FROM edu.teachers WHERE teacherId=#{teacherId};
+  </delete>
+
+
+  <select id="selectOneById" resultMap="teacherMap" parameterType="int">
+    SELECT
+      t1.teacherId teacherId,
+      t1.teacherName teacherName,
+      t2.subjectId subjectId,
+      t2.subjectName subjectName,
+      t2.created created
+    FROM edu.teachers t1 JOIN edu.subject t2 ON t1.subjectId = t2.subjectId
+    WHERE t1.teacherId=#{teacherId};
+  </select>
+
+
+  <select id="selectList" resultMap="teacherMap">
+    SELECT
+      t1.teacherId teacherId,
+      t1.teacherName teacherName,
+      t2.subjectId subjectId,
+      t2.subjectName subjectName,
+      t2.created created
+    FROM edu.teachers t1 JOIN edu.subject t2 ON t1.subjectId = t2.subjectId
+  </select>
+
+</mapper>

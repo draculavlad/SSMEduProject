@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jacob.su.edu.domain.Subject">
+  <resultMap id="baseSubjectMap" type="jacob.su.edu.domain.Subject" >
+    <id column="subjectId" property="subjectId"></id>
+    <result column="subjectName" property="subjectName"></result>
+    <result column="created" property="created"></result>
+  </resultMap>
+
+
+  <sql id="keys">
+    <trim suffixOverrides=",">
+      <if test="subjectName!=null">
+        subjectName,
+      </if>
+      <if test="created!=null">
+        created,
+      </if>
+    </trim>
+  </sql>
+
+  <sql id="values">
+    <trim suffixOverrides=",">
+      <if test="subjectName!=null">
+        #{subjectName},
+      </if>
+      <if test="created!=null">
+        #{created},
+      </if>
+    </trim>
+  </sql>
+
+  <insert id="insertOne" parameterType="subject" keyProperty="subjectId" useGeneratedKeys="true">
+    INSERT INTO edu.subjects (<include refid="keys"/>) VALUES  (<include refid="values" />);
+  </insert>
+
+  <update id="updateOne" parameterType="subject">
+ 		update edu.subjects
+ 		<set>
+      <trim suffixOverrides=",">
+        <if test="subjectName!=null">
+          subjectName=#{subjectName},
+        </if>
+        <if test="created!=null">
+          created=#{created},
+        </if>
+      </trim>
+ 		</set>
+ 		where subjectId=#{subjectId};
+ 	</update>
+
+  <delete id="deleteOne" parameterType="int">
+    DELETE FROM edu.subjects WHERE subjectId=#{subjectId};
+  </delete>
+
+
+  <select id="selectOneById" resultMap="baseSubjectMap" parameterType="int">
+    SELECT * FROM edu.subjects WHERE subjectId=#{subjectId};
+  </select>
+
+
+  <select id="selectList" resultMap="baseSubjectMap">
+    SELECT * FROM edu.subjects;
+  </select>
+</mapper>

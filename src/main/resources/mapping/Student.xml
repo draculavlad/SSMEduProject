@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jacob.su.edu.domain.Student">
+  <resultMap id="baseStudentMap" type="jacob.su.edu.domain.Student">
+    <id column="studentId" property="studentId"></id>
+    <result column="studentName" property="studentName"></result>
+    <result column="gender" property="gender"></result>
+  </resultMap>
+
+  <resultMap id="studentMap" type="jacob.su.edu.domain.Student" extends="baseStudentMap">
+    <association property="subjects" column="subjectId" resultMap="jacob.su.edu.domain.Subject.baseSubjectMap"></association>
+  </resultMap>
+
+  <sql id="keys">
+    <trim suffixOverrides=",">
+      <if test="studentName!=null">
+        studentName,
+      </if>
+      <if test="gender!=null">
+        gender,
+      </if>
+    </trim>
+  </sql>
+
+  <sql id="values">
+    <trim suffixOverrides=",">
+      <if test="studentName!=null">
+        #{studentName},
+      </if>
+      <if test="gender!=null">
+        #{gender},
+      </if>
+    </trim>
+  </sql>
+
+  <insert id="insertOne" parameterType="student" keyProperty="studentId" useGeneratedKeys="true">
+    INSERT INTO edu.students (<include refid="keys"/>) VALUES  (<include refid="values" />);
+  </insert>
+
+  <update id="updateOne" parameterType="student">
+ 		update edu.students
+    <set>
+      <trim suffixOverrides=",">
+        <if test="studentName!=null">
+          studentName=#{studentName},
+        </if>
+        <if test="gender!=null">
+          gender=#{gender},
+        </if>
+      </trim>
+ 		</set>
+ 		where studentId=#{studentId};
+ 	</update>
+
+  <delete id="deleteOne" parameterType="int">
+    DELETE FROM edu.students WHERE studentId=#{studentId};
+  </delete>
+
+
+  <select id="selectOneById" resultMap="studentMap" parameterType="int">
+    SELECT
+      s1.studentId studentId,
+      s1.studentName studentName,
+      s1.gender gender,
+      s2.subjectId subjectId,
+      s2.subjectName subjectName,
+      s2.created created
+    FROM edu.students s1 JOIN
+      (
+        SELECT ss2.subjectId subjectId, ss2.subjectName subjectName, ss2.created created, ss1.studentId studentId FROM edu.signins ss1 JOIN edu.subjects ss2 ON ss1.subjectId=ss2.subjectId WHERE ss1.studentId=#{studentId}
+      ) s2
+    ON s1.studentId=s2.studentId
+    ;
+  </select>
+
+  <select id="selectList" resultMap="baseStudentMap">
+    SELECT * FROM edu.students ;
+  </select>
+
+</mapper>
